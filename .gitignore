@@ -10,3 +10,12 @@
 *.lai
 *.la
 *.a
+
+.project
+Debug
+
+*.swp
+*~
+
+.cproject
+.settings
