@@ -1,4 +1,4 @@
-#include "../lib/platform.h"
+#include "platform.h"
 
 #include <string>
 #include <stdlib.h>
@@ -12,7 +12,6 @@ void Platform::init()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glShadeModel (GL_FLAT);
 }
-
 
 
 void Platform::KeyboardCallback (unsigned char key, int x, int y) {

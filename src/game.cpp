@@ -1,5 +1,10 @@
-#include "../lib/platform.h"
+#include "platform.h"
 
+class Game()
+{
+    public:
+        void Game();
+};
 
 int main(int argc, char** argv)
 {
