@@ -1,7 +1,10 @@
 #include "platform.h"
+#include "arm.h"
 #include <GL/glut.h>
-#include <iostream>
+
 #include <stdio.h>
+#include <iostream>
+
 #define TITLE "Lonely Arm"
 #define VERSION "Beta"
 
@@ -11,7 +14,7 @@ class Game
         static void run(int argc, char* argv[]);
     private:
         static Platform platform;
-//        static Arm arm;
+        static Arm arm;
         static void configure();
         static void keyboardCallBack(unsigned char key, int x, int y);
         static void displayCallBack();
@@ -19,6 +22,7 @@ class Game
 };
 
 Platform Game::platform;
+Arm Game::arm;
 
 void Game::run(int argc, char* argv[])
 {
@@ -45,12 +49,19 @@ void Game::configure()
 
 void Game::keyboardCallBack (unsigned char key, int x, int y) 
 {
-
+    std::cout << "key pressed: " << key << "\n";
 	switch (key)
 	{
 		case 27: 	// ESCAPE key
 			exit(0);
 			break;
+        case GLUT_KEY_LEFT:
+            arm.rotateCounterClockwise();
+            break;
+        case GLUT_KEY_RIGHT:
+            std::cout << "teste\n";
+            arm.rotateClockwise();
+            break;
 	}
 }
 
@@ -61,10 +72,7 @@ void Game::displayCallBack()
     glMatrixMode(GL_MODELVIEW);
 
     platform.draw();
-
-//    glTranslatef(1,1,0);
-    glColor3f(1,0,0);
-    glutSolidSphere(0.5,500,500);
+    arm.draw();
 
     glutSwapBuffers();
 }
@@ -76,7 +84,6 @@ void Game::reshapeCallBack(int width, int height)
     glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         double ratio = (double)width / (double)height;
-        std::cout << "ratio: " << ratio;
         glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
         gluLookAt(0, 0, -1, 0, 0, 0, 0, 1, 0);
         glMatrixMode(GL_MODELVIEW);
