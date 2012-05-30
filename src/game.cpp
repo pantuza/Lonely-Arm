@@ -17,6 +17,7 @@ class Game
         static Arm arm;
         static void configure();
         static void keyboardCallBack(unsigned char key, int x, int y);
+        static void specialKeysCallBack(int key, int x, int y);
         static void displayCallBack();
         static void reshapeCallBack(int width, int height);
 };
@@ -26,20 +27,21 @@ Arm Game::arm;
 
 void Game::run(int argc, char* argv[])
 {
-	   glutInit(&argc,argv);
-	   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	    glutInit(&argc,argv);
+	    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 
-	   glutInitWindowPosition(0,0);
-	   glutCreateWindow(TITLE);
-	   glutFullScreen();
+	    glutInitWindowPosition(0,0);
+	    glutCreateWindow(TITLE);
+	    glutFullScreen();
 
-	   configure();
+	    configure();
 
-	   glutDisplayFunc(displayCallBack);
-	   glutKeyboardFunc(keyboardCallBack);
-       glutReshapeFunc(reshapeCallBack);
+	    glutDisplayFunc(displayCallBack);
+	    glutKeyboardFunc(keyboardCallBack);
+        glutSpecialFunc(specialKeysCallBack);
+        glutReshapeFunc(reshapeCallBack);
 
-	   glutMainLoop();
+	    glutMainLoop();
 }
 
 void Game::configure()
@@ -50,19 +52,49 @@ void Game::configure()
 void Game::keyboardCallBack (unsigned char key, int x, int y) 
 {
     std::cout << "key pressed: " << key << "\n";
-	switch (key)
+	
+    switch( key )
 	{
 		case 27: 	// ESCAPE key
 			exit(0);
 			break;
-        case GLUT_KEY_LEFT:
-            arm.rotateCounterClockwise();
+        case ' ': 	// ESPACE key
+	        std::cout << "roooodandoo!\n";
+            glRotatef(-5,0,1,0);
+            glutPostRedisplay(); 
+           //gluLookAt(rotation, 0, -1, 0, 0, 0, 0, 1, 0);
+			break;
+}
+}
+
+void Game::specialKeysCallBack(int key, int x, int y)
+{
+    int modifier = glutGetModifiers();
+
+    switch( key )
+    {
+         case GLUT_KEY_LEFT:
+            if( modifier & GLUT_ACTIVE_CTRL )
+                arm.moveLeft();
+            else
+                arm.rotateCounterClockwise();
+
             break;
         case GLUT_KEY_RIGHT:
-            std::cout << "teste\n";
-            arm.rotateClockwise();
+            if( modifier & GLUT_ACTIVE_CTRL )
+                arm.moveRight();
+            else
+                arm.rotateClockwise();
+    
             break;
-	}
+        case GLUT_KEY_UP:
+            arm.rotateClockwise2();
+            break;
+        case GLUT_KEY_DOWN:
+            arm.rotateCounterClockwise2();
+            break;
+  }
+    glutPostRedisplay(); 
 }
 
 void Game::displayCallBack()
@@ -86,7 +118,7 @@ void Game::reshapeCallBack(int width, int height)
         double ratio = (double)width / (double)height;
         glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
         gluLookAt(0, 0, -1, 0, 0, 0, 0, 1, 0);
-        glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
 }
 
 int main(int argc, char** argv)
