@@ -59,10 +59,8 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
 			exit(0);
 			break;
         case ' ': 	// ESPACE key
-	        std::cout << "roooodandoo!\n";
-            glRotatef(-5,0,1,0);
+            gluLookAt(0, 0, -1, 0, 0, 0, 0, 1, 0);
             glutPostRedisplay(); 
-           //gluLookAt(rotation, 0, -1, 0, 0, 0, 0, 1, 0);
 			break;
 }
 }
