@@ -1,12 +1,13 @@
 #include "platform.h"
 #include "arm.h"
 #include <GL/glut.h>
-
+#include <math.h>
 #include <stdio.h>
 #include <iostream>
 
 #define TITLE "Lonely Arm"
 #define VERSION "Beta"
+#define PI 3.14159265
 
 class Game
 {
@@ -20,10 +21,12 @@ class Game
         static void specialKeysCallBack(int key, int x, int y);
         static void displayCallBack();
         static void reshapeCallBack(int width, int height);
+        static double ratio;
 };
 
 Platform Game::platform;
 Arm Game::arm;
+double Game::ratio = 1;
 
 void Game::run(int argc, char* argv[])
 {
@@ -51,7 +54,7 @@ void Game::configure()
 
 void Game::keyboardCallBack (unsigned char key, int x, int y) 
 {
-    std::cout << "key pressed: " << key << "\n";
+//    std::cout << "key pressed: " << key << "\n";
 	
     switch( key )
 	{
@@ -59,7 +62,15 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
 			exit(0);
 			break;
         case ' ': 	// ESPACE key
-            gluLookAt(0, 0, -1, 0, 0, 0, 0, 1, 0);
+            static float angle = -90;
+            angle++;
+            std::cout << "ang: "<< angle << "\n";
+            std::cout << "cos: " << cos(angle*PI/180) << "\n";
+            std::cout << "sin: " << sin(angle*PI/180);
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
+            gluLookAt(cos(angle*PI/180)*2, 1, sin(angle*PI/180)*2, 0, 0, 1, 0, 1, 0);
             glutPostRedisplay(); 
 			break;
 }
@@ -113,7 +124,7 @@ void Game::reshapeCallBack(int width, int height)
 
     glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        double ratio = (double)width / (double)height;
+        ratio = (double)width / (double)height;
         glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
         gluLookAt(0, 0, -1, 0, 0, 0, 0, 1, 0);
     glMatrixMode(GL_MODELVIEW);
