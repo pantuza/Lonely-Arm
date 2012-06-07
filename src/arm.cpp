@@ -6,18 +6,21 @@ Arm::Arm() : ROTATION_FACTOR(5), DISPLACEMENT(0.01)
 {
     rotation = 0;
     rotation2 = 0;
-    direction = 0;
+    
+    xPosition = 0;
+    zPosition = 1;
+
+    Parts armParts(3);
 }
 
 void Arm::draw()
 {
-    Parts armParts(3);
 
     glPushMatrix();
-        glTranslatef(direction, 0.05, 1);
+        glTranslatef(xPosition, 0.05, zPosition);
         glRotatef(-90, 1, 0, 0);
-        
         armParts.pushParts();
+        glRotatef(90, 1, 0, 0);
     glPopMatrix();
 }
 
@@ -42,12 +45,19 @@ void Arm::rotateCounterClockwise2()
 
 void Arm::moveRight()
 {
-    direction -= DISPLACEMENT;
+    xPosition -= DISPLACEMENT;
 }
 
 void Arm::moveLeft()
 {
-    direction += DISPLACEMENT;
+    xPosition += DISPLACEMENT;
 }
-
+void Arm::moveUp()
+{
+    zPosition += DISPLACEMENT;
+}
+void Arm::moveDown()
+{
+    zPosition -= DISPLACEMENT;
+}
 

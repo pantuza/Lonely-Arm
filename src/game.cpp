@@ -70,7 +70,7 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
             glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
-            gluLookAt(cos(angle*PI/180)*2, 1, sin(angle*PI/180)*2, 0, 0, 1, 0, 1, 0);
+            gluLookAt(cos(angle*PI/180)*3, 1, sin(angle*PI/180)*3, 0, 0, 1, 0, 1, 0);
             glutPostRedisplay(); 
 			break;
 }
