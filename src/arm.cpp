@@ -4,13 +4,13 @@
 
 Arm::Arm() : ROTATION_FACTOR(5), DISPLACEMENT(0.01)
 {
-    rotation = 0;
-    rotation2 = 0;
+    armRotation = 0.0;
+    foreArmRotation = 0.0;
     
     xPosition = 0;
     zPosition = 1;
 
-    Parts armParts(3);
+    Parts armParts;
 }
 
 void Arm::draw()
@@ -19,28 +19,41 @@ void Arm::draw()
     glPushMatrix();
         glTranslatef(xPosition, 0.05, zPosition);
         glRotatef(-90, 1, 0, 0);
+        
         armParts.pushParts();
+        
         glRotatef(90, 1, 0, 0);
     glPopMatrix();
 }
 
-void Arm::rotateClockwise()
+void Arm::rotateClockwise(int part)
 {
-    rotation += ROTATION_FACTOR;
+    switch(part) 
+    {
+       case 1:
+            armRotation += ROTATION_FACTOR;
+            armParts.setArmRotation(armRotation);
+            break;
+       case 2:
+            foreArmRotation += ROTATION_FACTOR;
+            armParts.setForeArmRotation(foreArmRotation);
+            break;
+    }
 }
 
-void Arm::rotateCounterClockwise()
+void Arm::rotateCounterClockwise(int part)
 {
-    rotation -= ROTATION_FACTOR;
-}
-void Arm::rotateClockwise2()
-{
-    rotation2 += ROTATION_FACTOR;
-}
-
-void Arm::rotateCounterClockwise2()
-{
-    rotation2 -= ROTATION_FACTOR;
+    switch(part)
+    {
+        case 1:
+            armRotation -= ROTATION_FACTOR;
+            armParts.setArmRotation(armRotation);
+            break;
+       case 2:
+            foreArmRotation -= ROTATION_FACTOR;
+            armParts.setForeArmRotation(foreArmRotation);
+            break;
+    }
 }
 
 void Arm::moveRight()

@@ -3,24 +3,29 @@
 class Parts
 {
     public:
-        Parts(int numParts);
+        Parts();
         void pushParts();
+        void setArmRotation(float rotation);
+        void setForeArmRotation(float rotation);
+        void setBaseArmRotation(float rotation);
+
 
     private:
         /* Attributes */
         float partHeight;
         float jointRadius;
         float handHeight;
+        float baseArmRotation;
+        float armRotation;
+        float foreArmRotation;
+
         float basePartRadius;
         float topPartRadius;
         float slices;
         float stacks;
-        float armRotation;
-        float foreArmRotation;
-        int   numParts;
-        
+               
         /* Methods */
-        void drawPart();
+        void drawPart(float rotation);
         void drawJoint();
         void drawHand();
 };

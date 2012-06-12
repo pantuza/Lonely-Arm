@@ -22,11 +22,14 @@ class Game
         static void displayCallBack();
         static void reshapeCallBack(int width, int height);
         static double ratio;
+
+        static int currentPart;
 };
 
 Platform Game::platform;
 Arm Game::arm;
 double Game::ratio = 1;
+int Game::currentPart = 1;
 
 void Game::run(int argc, char* argv[])
 {
@@ -70,10 +73,17 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
             glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
-            gluLookAt(cos(angle*PI/180)*3, 1, sin(angle*PI/180)*3, 0, 0, 1, 0, 1, 0);
+            gluLookAt(cos(angle*PI/180), 1, sin(angle*PI/180), 0, 0, 1, 0, 1, 0 );
             glutPostRedisplay(); 
 			break;
-}
+
+        case '1':
+            currentPart = 1;
+            break;
+        case '2':
+            currentPart = 2;
+            break;
+    }
 }
 
 void Game::specialKeysCallBack(int key, int x, int y)
@@ -82,27 +92,30 @@ void Game::specialKeysCallBack(int key, int x, int y)
 
     switch( key )
     {
-         case GLUT_KEY_LEFT:
+        case GLUT_KEY_LEFT:
             if( modifier & GLUT_ACTIVE_CTRL )
                 arm.moveLeft();
             else
-                arm.rotateCounterClockwise();
-
+                arm.rotateCounterClockwise(currentPart);
             break;
+
         case GLUT_KEY_RIGHT:
             if( modifier & GLUT_ACTIVE_CTRL )
                 arm.moveRight();
             else
-                arm.rotateClockwise();
-    
+                arm.rotateClockwise(currentPart);
             break;
-        case GLUT_KEY_UP:
-            arm.rotateClockwise2();
+
+       case GLUT_KEY_UP:
+            if( modifier & GLUT_ACTIVE_CTRL )
+                arm.moveUp();
             break;
-        case GLUT_KEY_DOWN:
-            arm.rotateCounterClockwise2();
+
+       case GLUT_KEY_DOWN:
+            if( modifier & GLUT_ACTIVE_CTRL )
+                arm.moveDown();
             break;
-  }
+    }
     glutPostRedisplay(); 
 }
 

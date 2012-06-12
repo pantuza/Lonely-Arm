@@ -1,44 +1,62 @@
 #include "parts.h"
 #include <GL/glut.h>
-
-Parts::Parts(int numParts)
+#include <stdio.h>
+#include <iostream>
+Parts::Parts()
 {
     partHeight = 0.15;
     jointRadius = 0.02;
     handHeight = 0.05;
-    this->numParts = numParts;
 
-    basePartRadius, topPartRadius = 0.1;
-    slices, stacks = 500;
+    baseArmRotation = 0.0;
+    armRotation = 0.0;
+    foreArmRotation = 0.0;
+
+    basePartRadius = 0.01;
+    topPartRadius = 0.01;
+    slices = 500; 
+    stacks = 500;
 }
 
 void Parts::pushParts()
 {
-    if( numParts > 0 )
-    {
+    glPushMatrix();
+       drawPart(baseArmRotation);
+        drawJoint();
+
         glPushMatrix();
-            drawPart();
+            drawPart(armRotation);
             drawJoint();
-            numParts--;
-            /** Recursive call */
-            pushParts();
+
+            glPushMatrix();
+                drawPart(foreArmRotation);
+                drawJoint();
+                drawHand();
+            glPopMatrix();
+
         glPopMatrix();
-    }
+
+    glPopMatrix();
 }
 
-void Parts::setArmRotation( rotation )
+void Parts::setBaseArmRotation(float rotation)
+{
+    baseArmRotation = rotation;
+}
+
+void Parts::setArmRotation(float rotation)
 {
     armRotation = rotation;
 }
 
-void Parts::setForeArmRotation( rotation )
+void Parts::setForeArmRotation(float rotation)
 {
-    foreArmRotationn = rotation;
+    foreArmRotation = rotation;
 }
 
-void Parts::drawPart()
+void Parts::drawPart(float rotation)
 {
-    glRotatef(armRotation, 0, 1, 0);
+    glRotatef(rotation, 0, 1, 0);
     glColor3f(1,1,0);
     gluCylinder(gluNewQuadric(), basePartRadius, topPartRadius, 
                                                 partHeight, slices, stacks);
@@ -53,5 +71,20 @@ void Parts::drawJoint()
 
 void Parts::drawHand()
 {
+    static float rotation = 0;
+    glRotatef(++rotation, 0,1,0);
+    glColor3f(0.5,0.5,0.5);
+    glBegin(GL_QUADS);
+    glVertex3f(0.2, 0, 0);
+    glVertex3f(0.2, 0, 0.01);
+    glVertex3f(0, 0, 0.01);
+    glVertex3f(0, 0, 0);
+    glEnd();
+    glBegin(GL_QUADS);
+    glVertex3f(-0.2, 0, 0);
+    glVertex3f(-0.2, 0, 0.01);
+    glVertex3f(0, 0, 0.01);
+    glVertex3f(0, 0, 0);
+    glEnd();
 
 }
