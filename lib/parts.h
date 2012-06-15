@@ -8,7 +8,8 @@ class Parts
         void setArmRotation(float rotation);
         void setForeArmRotation(float rotation);
         void setBaseArmRotation(float rotation);
-
+        void closeHand();
+        void openHand();
 
     private:
         /* Attributes */
@@ -23,7 +24,7 @@ class Parts
         float topPartRadius;
         float slices;
         float stacks;
-               
+        float fingerAngle;       
         /* Methods */
         void drawPart(float rotation);
         void drawJoint();

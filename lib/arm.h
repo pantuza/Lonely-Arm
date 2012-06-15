@@ -13,15 +13,21 @@ class Arm
         void moveRight();
         void moveUp();
         void moveDown();
+        void setFlyDown();
+        void setFlyUp();
+        void setFlyRight();
+        void setFlyLeft();
 
    private: 
-        
+        void drawBase();
         float armRotation;
         float foreArmRotation;
 
-        float xPosition;
-        float zPosition;
         Parts armParts;
+
+        float xFlightPosition;
+        float yFlightPosition;
+        float zFlightPosition;
 
         const float DISPLACEMENT;
         const int ROTATION_FACTOR;

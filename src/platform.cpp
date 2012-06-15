@@ -15,5 +15,4 @@ void Platform::draw()
 
 Platform::Platform()
 {
-    test = 0;
 }

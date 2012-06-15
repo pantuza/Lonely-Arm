@@ -21,15 +21,22 @@ class Game
         static void specialKeysCallBack(int key, int x, int y);
         static void displayCallBack();
         static void reshapeCallBack(int width, int height);
+        static void updateCamera();
         static double ratio;
-
+        static float zoom;
         static int currentPart;
+        static float angle;
+        static bool flyingMode;
+
 };
 
 Platform Game::platform;
 Arm Game::arm;
 double Game::ratio = 1;
 int Game::currentPart = 1;
+float Game::zoom = 1;
+float Game::angle = 45;
+bool Game::flyingMode = false;
 
 void Game::run(int argc, char* argv[])
 {
@@ -53,6 +60,7 @@ void Game::run(int argc, char* argv[])
 void Game::configure()
 {
     glShadeModel (GL_FLAT);
+    glEnable(GL_CULL_FACE);
 }
 
 void Game::keyboardCallBack (unsigned char key, int x, int y) 
@@ -65,15 +73,7 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
 			exit(0);
 			break;
         case ' ': 	// ESPACE key
-            static float angle = -90;
             angle++;
-            std::cout << "ang: "<< angle << "\n";
-            std::cout << "cos: " << cos(angle*PI/180) << "\n";
-            std::cout << "sin: " << sin(angle*PI/180);
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
-            gluLookAt(cos(angle*PI/180), 1, sin(angle*PI/180), 0, 0, 1, 0, 1, 0 );
             glutPostRedisplay(); 
 			break;
 
@@ -83,6 +83,12 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
         case '2':
             currentPart = 2;
             break;
+        case '3':
+            currentPart = 3;
+            break;
+        case 'f':
+            flyingMode = !flyingMode;
+
     }
 }
 
@@ -95,6 +101,8 @@ void Game::specialKeysCallBack(int key, int x, int y)
         case GLUT_KEY_LEFT:
             if( modifier & GLUT_ACTIVE_CTRL )
                 arm.moveLeft();
+             else if(flyingMode)
+                arm.setFlyLeft();           
             else
                 arm.rotateCounterClockwise(currentPart);
             break;
@@ -102,6 +110,8 @@ void Game::specialKeysCallBack(int key, int x, int y)
         case GLUT_KEY_RIGHT:
             if( modifier & GLUT_ACTIVE_CTRL )
                 arm.moveRight();
+            else if(flyingMode)
+                arm.setFlyRight();
             else
                 arm.rotateClockwise(currentPart);
             break;
@@ -109,12 +119,20 @@ void Game::specialKeysCallBack(int key, int x, int y)
        case GLUT_KEY_UP:
             if( modifier & GLUT_ACTIVE_CTRL )
                 arm.moveUp();
+            else if(flyingMode)
+                arm.setFlyUp();
+            else if(zoom < 10)
+                zoom += 0.1;
             break;
 
        case GLUT_KEY_DOWN:
             if( modifier & GLUT_ACTIVE_CTRL )
                 arm.moveDown();
-            break;
+             else if(flyingMode)
+                arm.setFlyDown();           
+            else if(zoom > 3)
+                zoom -= 0.1;
+             break;
     }
     glutPostRedisplay(); 
 }
@@ -127,20 +145,26 @@ void Game::displayCallBack()
 
     platform.draw();
     arm.draw();
-
+    
+    updateCamera();
     glutSwapBuffers();
 }
 
 void Game::reshapeCallBack(int width, int height)
 {
     glViewport (0, 0, (GLsizei) width, (GLsizei) height);
+    ratio = (double)width / (double)height;
+    updateCamera();
+}
 
+void Game::updateCamera()
+{
     glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        ratio = (double)width / (double)height;
-        glOrtho(-1, 1, -1/ratio, 1/ratio, 0, 50);
-        gluLookAt(0, 0, -1, 0, 0, 0, 0, 1, 0);
+    glLoadIdentity();
+    gluPerspective(45, 2, 1, 30);
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(cos(angle*PI/180), sin(angle*PI/180), zoom, 0, 0, 1, 0, 1, 0 );
 }
 
 int main(int argc, char** argv)

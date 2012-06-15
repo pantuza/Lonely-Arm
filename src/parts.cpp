@@ -14,6 +14,7 @@ Parts::Parts()
 
     basePartRadius = 0.01;
     topPartRadius = 0.01;
+    fingerAngle = 60;
     slices = 500; 
     stacks = 500;
 }
@@ -71,20 +72,34 @@ void Parts::drawJoint()
 
 void Parts::drawHand()
 {
-    static float rotation = 0;
-    glRotatef(++rotation, 0,1,0);
     glColor3f(0.5,0.5,0.5);
-    glBegin(GL_QUADS);
-    glVertex3f(0.2, 0, 0);
-    glVertex3f(0.2, 0, 0.01);
-    glVertex3f(0, 0, 0.01);
-    glVertex3f(0, 0, 0);
-    glEnd();
-    glBegin(GL_QUADS);
-    glVertex3f(-0.2, 0, 0);
-    glVertex3f(-0.2, 0, 0.01);
-    glVertex3f(0, 0, 0.01);
-    glVertex3f(0, 0, 0);
-    glEnd();
+    glRotatef(60,0,1,0);
+    gluCylinder(gluNewQuadric(), 0.008, 0.008, 0.1, slices, stacks);
+    glTranslatef(0,0,0.1);
 
+    glRotatef(-fingerAngle,0,1,0);
+    glutSolidCone(0.008, 0.1,slices,stacks);
+    glRotatef(fingerAngle,0,1,0);
+
+    glTranslatef(0,0,-0.1);
+
+    glRotatef(-120,0,1,0);
+    gluCylinder(gluNewQuadric(), 0.008, 0.008, 0.1, slices, stacks);
+    glTranslatef(0,0,0.1);
+    glRotatef(fingerAngle,0,1,0);
+    glutSolidCone(0.008, 0.1,slices,stacks);
+    glRotatef(-fingerAngle,0,1,0);
+    glTranslatef(0,0,-0.1);
+}
+
+void Parts::closeHand()
+{
+    if( fingerAngle < 120 )
+        fingerAngle += 10;
+}
+
+void Parts::openHand()
+{
+    if( fingerAngle >= 0 )
+        fingerAngle -= 10;
 }
