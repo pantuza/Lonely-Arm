@@ -15,6 +15,7 @@ Parts::Parts()
     basePartRadius = 0.01;
     topPartRadius = 0.01;
     fingerAngle = 60;
+    handRotation = 0;
     slices = 500; 
     stacks = 500;
 }
@@ -63,10 +64,21 @@ void Parts::drawPart(float rotation)
                                                 partHeight, slices, stacks);
 }
 
+void Parts::setFingerAngle(float angle)
+{
+    fingerAngle = angle;
+}
+
+void Parts::rotateHand()
+{
+    handRotation += 10;
+}
+
 void Parts::drawJoint()
 {
     glColor3f(0,0,1);
     glTranslatef(0, 0, partHeight + jointRadius/2);
+    glRotatef(handRotation, 0, 0, 1);
     glutSolidSphere(jointRadius, slices, stacks);
 }
 

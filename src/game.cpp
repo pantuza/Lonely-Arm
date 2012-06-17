@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "arm.h"
+#include "camera.h"
 #include <GL/glut.h>
 #include <math.h>
 #include <stdio.h>
@@ -7,7 +8,7 @@
 
 #define TITLE "Lonely Arm"
 #define VERSION "Beta"
-#define PI 3.14159265
+
 
 class Game
 {
@@ -21,46 +22,89 @@ class Game
         static void specialKeysCallBack(int key, int x, int y);
         static void displayCallBack();
         static void reshapeCallBack(int width, int height);
-        static void updateCamera();
-        static double ratio;
-        static float zoom;
         static int currentPart;
-        static float angle;
         static bool flyingMode;
+        static void timerCallBack(int value);
 
 };
-
 Platform Game::platform;
 Arm Game::arm;
-double Game::ratio = 1;
 int Game::currentPart = 1;
-float Game::zoom = 1;
-float Game::angle = 45;
 bool Game::flyingMode = false;
 
 void Game::run(int argc, char* argv[])
 {
-	    glutInit(&argc,argv);
-	    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInit(&argc,argv);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 
-	    glutInitWindowPosition(0,0);
-	    glutCreateWindow(TITLE);
-	    glutFullScreen();
+    glutInitWindowPosition(0,0);
+    glutCreateWindow(TITLE);
+    glutFullScreen();
 
-	    configure();
+    configure();
 
-	    glutDisplayFunc(displayCallBack);
-	    glutKeyboardFunc(keyboardCallBack);
-        glutSpecialFunc(specialKeysCallBack);
-        glutReshapeFunc(reshapeCallBack);
+    glutDisplayFunc(displayCallBack);
+    glutKeyboardFunc(keyboardCallBack);
+    glutSpecialFunc(specialKeysCallBack);
+    glutReshapeFunc(reshapeCallBack);
 
-	    glutMainLoop();
+    glutMainLoop();
 }
 
 void Game::configure()
 {
-    glShadeModel (GL_FLAT);
-    glEnable(GL_CULL_FACE);
+     GLfloat placeLight[4]={0.2,0.2,0.2,1.0};
+     GLfloat diffusedLight[4]={0.7,0.7,0.7,1.0}; // color 
+     GLfloat specularLight[4]={1.0, 1.0, 1.0, 1.0}; // "brightness" 
+     GLfloat lightPosition[4]={10.0, 10.0, 1.0, 1.0}; // light position variation
+
+     glShadeModel (GL_FLAT);
+
+     // material brightness 
+         GLfloat specularity[4]={1.0,1.0,1.0,1.0};
+         GLint materialSpecularity = 60;
+
+     // Gouraud colors
+         glShadeModel(GL_SMOOTH);
+
+         // reflection 
+         glMaterialfv(GL_FRONT,GL_SPECULAR, specularity);
+         // brightness concentration 
+     glMateriali(GL_FRONT,GL_SHININESS,materialSpecularity);
+
+         // place light
+         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, placeLight);
+
+         glLightfv(GL_LIGHT0, GL_AMBIENT, placeLight);
+         glLightfv(GL_LIGHT0, GL_DIFFUSE, diffusedLight );
+         glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight );
+         glLightfv(GL_LIGHT0, GL_POSITION, lightPosition );
+
+         glEnable(GL_COLOR_MATERIAL);
+         glEnable(GL_LIGHTING);
+         glEnable(GL_LIGHT0);
+         glEnable(GL_DEPTH_TEST);
+
+//    glEnable(GL_CULL_FACE);
+}
+
+void Game::timerCallBack(int value)
+{
+    if(value == 1)
+    {
+        if(flyingMode)
+        {
+            std::cout << "to voando cara \n";
+            arm.fly(true);
+            glutPostRedisplay();
+            glutTimerFunc(5, timerCallBack, value);
+        }
+    } else
+    {
+        arm.fly(false);
+        glutPostRedisplay();
+    }
+    std::cout << "flying: " << flyingMode << "\n";
 }
 
 void Game::keyboardCallBack (unsigned char key, int x, int y) 
@@ -73,7 +117,7 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
 			exit(0);
 			break;
         case ' ': 	// ESPACE key
-            angle++;
+            Camera::riseAngle();
             glutPostRedisplay(); 
 			break;
 
@@ -87,8 +131,19 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
             currentPart = 3;
             break;
         case 'f':
-            flyingMode = !flyingMode;
-
+            if(flyingMode)
+            {
+                std::cout << "paraaaaaaaaa \n";
+                flyingMode = false;
+                timerCallBack(0);
+            }
+            else
+            {
+                std::cout << "vo pedir pra voar __o__ \n";
+                flyingMode = true;
+                timerCallBack(1);
+            }
+            break;
     }
 }
 
@@ -121,8 +176,8 @@ void Game::specialKeysCallBack(int key, int x, int y)
                 arm.moveUp();
             else if(flyingMode)
                 arm.setFlyUp();
-            else if(zoom < 10)
-                zoom += 0.1;
+            else if(Camera::getZoom() > 1)
+                Camera::zoomUp();
             break;
 
        case GLUT_KEY_DOWN:
@@ -130,9 +185,9 @@ void Game::specialKeysCallBack(int key, int x, int y)
                 arm.moveDown();
              else if(flyingMode)
                 arm.setFlyDown();           
-            else if(zoom > 3)
-                zoom -= 0.1;
-             break;
+            else if(Camera::getZoom() < 20)
+                Camera::zoomDown();
+            break;
     }
     glutPostRedisplay(); 
 }
@@ -140,31 +195,17 @@ void Game::specialKeysCallBack(int key, int x, int y)
 void Game::displayCallBack()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
     glMatrixMode(GL_MODELVIEW);
-
     platform.draw();
     arm.draw();
-    
-    updateCamera();
+    Camera::updateCamera(arm.getXarm(), arm.getYarm(), arm.getZarm());
     glutSwapBuffers();
 }
 
 void Game::reshapeCallBack(int width, int height)
 {
     glViewport (0, 0, (GLsizei) width, (GLsizei) height);
-    ratio = (double)width / (double)height;
-    updateCamera();
-}
-
-void Game::updateCamera()
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45, 2, 1, 30);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(cos(angle*PI/180), sin(angle*PI/180), zoom, 0, 0, 1, 0, 1, 0 );
+    Camera::updateCamera(arm.getXarm(), arm.getYarm(), arm.getZarm());
 }
 
 int main(int argc, char** argv)

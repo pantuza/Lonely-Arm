@@ -8,7 +8,10 @@ class Arm
         void draw();
         void rotateClockwise(int part);
         void rotateCounterClockwise(int part);
-        
+       
+        inline float getXarm() {return xFlightPosition;};
+        inline float getZarm() {return zFlightPosition;};
+        inline float getYarm() {return yFlightPosition;};
         void moveLeft();
         void moveRight();
         void moveUp();
@@ -17,6 +20,7 @@ class Arm
         void setFlyUp();
         void setFlyRight();
         void setFlyLeft();
+        void fly(bool value);
 
    private: 
         void drawBase();

@@ -5,13 +5,16 @@ OBJ=obj/
 
 all:	${BIN}lonely-arm
 
-${BIN}lonely-arm:	${OBJ}game.o ${OBJ}arm.o ${OBJ}platform.o ${OBJ}parts.o
+${BIN}lonely-arm:   ${OBJ}camera.o ${OBJ}arm.o ${OBJ}platform.o ${OBJ}parts.o ${OBJ}game.o
 	@echo -e "\n\e[1;34mCompiling obeject files:\e[0m"
-	g++ -o ${BIN}lonely-arm ${OBJ}platform.o ${OBJ}game.o ${OBJ}arm.o ${OBJ}parts.o -lGLU -lGL -lglut
+	g++ -o ${BIN}lonely-arm ${OBJ}platform.o ${OBJ}camera.o ${OBJ}game.o ${OBJ}arm.o ${OBJ}parts.o -lGLU -lGL -lglut
+
+${OBJ}camera.o: ${SRC}camera.cpp
+	g++ -O0 -g3 -Wall -I${LIB} -c -fmessage-length=0 -o ${OBJ}camera.o ${SRC}camera.cpp
 
 ${OBJ}game.o:	${SRC}game.cpp
 	g++ -O0 -g3 -Wall -I${LIB} -c -fmessage-length=0 -o ${OBJ}game.o ${SRC}game.cpp
-	
+
 ${OBJ}arm.o:	${SRC}arm.cpp
 	g++ -O0 -g3 -Wall -I${LIB} -c -fmessage-length=0 -o ${OBJ}arm.o ${SRC}arm.cpp
 

@@ -8,6 +8,8 @@ class Parts
         void setArmRotation(float rotation);
         void setForeArmRotation(float rotation);
         void setBaseArmRotation(float rotation);
+        void setFingerAngle(float angle);
+        void rotateHand();
         void closeHand();
         void openHand();
 
@@ -19,6 +21,7 @@ class Parts
         float baseArmRotation;
         float armRotation;
         float foreArmRotation;
+        float handRotation;
 
         float basePartRadius;
         float topPartRadius;

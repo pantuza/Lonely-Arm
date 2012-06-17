@@ -3,12 +3,12 @@
 
 void Platform::draw()
 {
-	glColor3f(0.7f, 0.7f, 0.7f);
+	glColor3f(0, 1, 1);
 
 	 glPushMatrix();
-         glScalef(1,0.1,1);
-         glTranslatef(0, 0, 1);
-         glutWireCube(1);
+         glScalef(2,0.1,2);
+         glTranslatef(0, 0, 0);
+         glutSolidCube(1);
          glScalef(1,1,1); 
      glPopMatrix();
 }
