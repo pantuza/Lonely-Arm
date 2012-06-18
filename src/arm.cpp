@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-Arm::Arm() : ROTATION_FACTOR(5), DISPLACEMENT(0.01)
+Arm::Arm() : ROTATION_FACTOR(5)
 {
     armRotation = 0.0;
     foreArmRotation = 0.0;
@@ -13,6 +13,8 @@ Arm::Arm() : ROTATION_FACTOR(5), DISPLACEMENT(0.01)
     xFlightPosition = -0.075;
     yFlightPosition = 0.1;
     zFlightPosition = -0.075;
+    
+    displacement = 0.01;
 
     Parts armParts;
 }
@@ -26,7 +28,6 @@ void Arm::draw()
         drawBase();
         armParts.pushParts();
         
-        glRotatef(90, 1, 0, 0);
     glPopMatrix();
 }
 void Arm::drawBase()
@@ -35,7 +36,6 @@ void Arm::drawBase()
         glColor3f(0.5,0.5,0.8);
         glScalef(1,1,0.1);    
         glutSolidCube(0.15);
-        glScalef(1,1,1);
     glPopMatrix();
 }
 void Arm::rotateClockwise(int part)
@@ -73,52 +73,69 @@ void Arm::rotateCounterClockwise(int part)
             break;
     }
 }
-void Arm::fly(bool value)
+void Arm::fly()
 {
-    if(value)
-    {
-        armParts.setFingerAngle(0);
-        armParts.rotateHand();
-    } else {
-        for(int i=0;i<50;i++)
-            setFlyLeft();
-    }
+    armParts.setFingerAngle(0);
+    armParts.rotateHand();
 }
 
 void Arm::setFlyDown()
 {
-    yFlightPosition -= DISPLACEMENT;
+//    std::cout << "y: " << yFlightPosition << "\n";
+    if(yFlightPosition > 0.1 || yFlightPosition <= -0.64)
+        yFlightPosition -= displacement;
+    else if(xFlightPosition < -1.1 || xFlightPosition > 1.1)
+        yFlightPosition -= displacement;
 }
+
 void Arm::setFlyUp()
 {
-     yFlightPosition += DISPLACEMENT;
+    if(yFlightPosition < -0.65 || yFlightPosition >= 0.05)
+        yFlightPosition += displacement;
+    else if(xFlightPosition < -1.1 || xFlightPosition > 1.1)
+        yFlightPosition += displacement;
 }
+
 void Arm::setFlyLeft()
 {
-    xFlightPosition -= DISPLACEMENT;
+    std::cout << "y: " << yFlightPosition << "\n";
+
+
+    if(yFlightPosition <= 0.1 && yFlightPosition > -0.64){
+        std::cout << "x: " << xFlightPosition << "\n";
+        if(xFlightPosition < -1.1 || xFlightPosition > 1.2)
+            xFlightPosition -= displacement;
+    }else
+        xFlightPosition -= displacement;
 }
 void Arm::setFlyRight()
-{
-    xFlightPosition += DISPLACEMENT;
+{   std::cout << "y: " << yFlightPosition << "\n";
+
+    if(yFlightPosition <= 0.1 && yFlightPosition > -0.64){
+            std::cout << "x: " << xFlightPosition << "\n";
+        if(xFlightPosition < -1.2 || xFlightPosition > 1.1)
+            xFlightPosition += displacement;
+}    else
+        xFlightPosition += displacement;
 }
 void Arm::moveRight()
 {
-    if(xFlightPosition < 0.4)
-        xFlightPosition += DISPLACEMENT;
+    if(xFlightPosition < 0.925)
+        xFlightPosition += displacement;
 }
 
 void Arm::moveLeft()
 {
-    if(xFlightPosition > -0.4)
-        xFlightPosition -= DISPLACEMENT;
+    if(xFlightPosition > -0.925)
+        xFlightPosition -= displacement;
 }
 void Arm::moveUp()
 {
-    if(zFlightPosition > -0.4)
-        zFlightPosition -= DISPLACEMENT;
+    if(zFlightPosition > -0.85)
+        zFlightPosition -= displacement;
 }
 void Arm::moveDown()
 {
-    if(zFlightPosition < 0.4)
-        zFlightPosition += DISPLACEMENT;
+    if(zFlightPosition < 1)
+        zFlightPosition += displacement;
 }

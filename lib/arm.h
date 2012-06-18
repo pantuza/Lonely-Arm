@@ -12,6 +12,7 @@ class Arm
         inline float getXarm() {return xFlightPosition;};
         inline float getZarm() {return zFlightPosition;};
         inline float getYarm() {return yFlightPosition;};
+        inline void setDisplacement(float disp) {displacement = disp;};
         void moveLeft();
         void moveRight();
         void moveUp();
@@ -20,20 +21,20 @@ class Arm
         void setFlyUp();
         void setFlyRight();
         void setFlyLeft();
-        void fly(bool value);
+        void fly();
 
    private: 
         void drawBase();
         float armRotation;
         float foreArmRotation;
-
+        
         Parts armParts;
 
         float xFlightPosition;
         float yFlightPosition;
         float zFlightPosition;
 
-        const float DISPLACEMENT;
+        float displacement;
         const int ROTATION_FACTOR;
 };
 

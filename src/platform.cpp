@@ -9,7 +9,6 @@ void Platform::draw()
          glScalef(2,0.1,2);
          glTranslatef(0, 0, 0);
          glutSolidCube(1);
-         glScalef(1,1,1); 
      glPopMatrix();
 }
 

@@ -11,6 +11,7 @@ class Camera
         static float eyeZ;
         static float angle;
         static float zoom;
+        static float windowRatio;
         
     public:
         inline static float getEyeX() {return eyeX;};
@@ -23,6 +24,7 @@ class Camera
         inline static void zoomUp() {zoom -= 0.1;};
         inline static void riseAngle(){angle++;};
         inline static void zoomDown() {zoom += 0.1;};
+        inline static void setWindowRatio(float ratio) {windowRatio = ratio;};
         static void updateCamera(float xArma, float yArm, float zArm);        
 };
 #endif

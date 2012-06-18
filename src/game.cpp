@@ -58,8 +58,6 @@ void Game::configure()
      GLfloat specularLight[4]={1.0, 1.0, 1.0, 1.0}; // "brightness" 
      GLfloat lightPosition[4]={10.0, 10.0, 1.0, 1.0}; // light position variation
 
-     glShadeModel (GL_FLAT);
-
      // material brightness 
          GLfloat specularity[4]={1.0,1.0,1.0,1.0};
          GLint materialSpecularity = 60;
@@ -85,26 +83,46 @@ void Game::configure()
          glEnable(GL_LIGHT0);
          glEnable(GL_DEPTH_TEST);
 
-//    glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 }
 
 void Game::timerCallBack(int value)
 {
+    float yPosOnPlatform = arm.getYarm() + 0.02;
     if(value == 1)
     {
         if(flyingMode)
         {
-            std::cout << "to voando cara \n";
-            arm.fly(true);
+            arm.fly();
             glutPostRedisplay();
             glutTimerFunc(5, timerCallBack, value);
+        } else
+        { 
+            arm.setDisplacement(0.1);
+            glutTimerFunc(5, timerCallBack, 2);
         }
-    } else
+        
+    } else if(value == 2)
     {
-        arm.fly(false);
+        
+        arm.setFlyDown();
         glutPostRedisplay();
+        if(arm.getYarm() == yPosOnPlatform)
+            arm.setDisplacement(0.01);
+
+        else if(flyingMode)
+            arm.setDisplacement(0.01);
+        
+        else if(arm.getYarm() < -5)
+            glutTimerFunc(5, timerCallBack, 3);
+        else    
+            glutTimerFunc(5, timerCallBack, value);
+
+    } else if(value == 3)
+    {
+        std::cout << "time do born again, bitch!\n";
     }
-    std::cout << "flying: " << flyingMode << "\n";
+
 }
 
 void Game::keyboardCallBack (unsigned char key, int x, int y) 
@@ -133,13 +151,13 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
         case 'f':
             if(flyingMode)
             {
-                std::cout << "paraaaaaaaaa \n";
+                //std::cout << "paraaaaaaaaa \n";
                 flyingMode = false;
                 timerCallBack(0);
             }
             else
             {
-                std::cout << "vo pedir pra voar __o__ \n";
+                //std::cout << "vo pedir pra voar __o__ \n";
                 flyingMode = true;
                 timerCallBack(1);
             }
@@ -154,9 +172,11 @@ void Game::specialKeysCallBack(int key, int x, int y)
     switch( key )
     {
         case GLUT_KEY_LEFT:
-            if( modifier & GLUT_ACTIVE_CTRL )
+            if( modifier & GLUT_ACTIVE_CTRL ){
                 arm.moveLeft();
-             else if(flyingMode)
+                static int count =0;
+                std::cout << count++ << " key" << key << "\n";
+}             else if(flyingMode)
                 arm.setFlyLeft();           
             else
                 arm.rotateCounterClockwise(currentPart);
@@ -205,13 +225,13 @@ void Game::displayCallBack()
 void Game::reshapeCallBack(int width, int height)
 {
     glViewport (0, 0, (GLsizei) width, (GLsizei) height);
+    float ratio = (float)width / (float)height;
+    Camera::setWindowRatio(ratio);
     Camera::updateCamera(arm.getXarm(), arm.getYarm(), arm.getZarm());
 }
 
 int main(int argc, char** argv)
 {
-    setvbuf(stdout, NULL, _IONBF, 0);
-    setvbuf(stderr, NULL, _IONBF, 0);
     Game::run(argc,argv);
 	return 0;
 }
