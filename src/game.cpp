@@ -5,6 +5,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <iostream>
+#include "text.h"
+#include "fps.h"
 
 #define TITLE "Lonely Arm"
 #define VERSION "Beta"
@@ -25,17 +27,27 @@ class Game
         static int currentPart;
         static bool flyingMode;
         static void timerCallBack(int value);
+        static Text labelFps;
+        static Fps fps;
+        static int dt;
 
 };
+
+#define FPS     120
+
 Platform Game::platform;
 Arm Game::arm;
 int Game::currentPart = 1;
 bool Game::flyingMode = false;
+Text Game::labelFps;
+Fps Game::fps;
+int Game::dt = (1000/FPS);
 
 void Game::run(int argc, char* argv[])
 {
     glutInit(&argc,argv);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    //glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
     glutInitWindowPosition(0,0);
     glutCreateWindow(TITLE);
@@ -47,6 +59,8 @@ void Game::run(int argc, char* argv[])
     glutKeyboardFunc(keyboardCallBack);
     glutSpecialFunc(specialKeysCallBack);
     glutReshapeFunc(reshapeCallBack);
+
+    labelFps.setPosition(0.90, 0.95, 0);
 
     glutMainLoop();
 }
@@ -88,18 +102,18 @@ void Game::configure()
 
 void Game::timerCallBack(int value)
 {
-    float yPosOnPlatform = arm.getYarm() + 0.02;
+    float yPosOnPlatform = arm.getYarm();
     if(value == 1)
     {
         if(flyingMode)
         {
             arm.fly();
             glutPostRedisplay();
-            glutTimerFunc(5, timerCallBack, value);
+            glutTimerFunc(dt, timerCallBack, value);
         } else
         { 
             arm.setDisplacement(0.1);
-            glutTimerFunc(5, timerCallBack, 2);
+            glutTimerFunc(dt, timerCallBack, 2);
         }
         
     } else if(value == 2)
@@ -114,9 +128,9 @@ void Game::timerCallBack(int value)
             arm.setDisplacement(0.01);
         
         else if(arm.getYarm() < -5)
-            glutTimerFunc(5, timerCallBack, 3);
+            glutTimerFunc(dt, timerCallBack, 3);
         else    
-            glutTimerFunc(5, timerCallBack, value);
+            glutTimerFunc(dt, timerCallBack, value);
 
     } else if(value == 3)
     {
@@ -214,11 +228,19 @@ void Game::specialKeysCallBack(int key, int x, int y)
 
 void Game::displayCallBack()
 {
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    fps.newFrame();
+
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    Camera::updateCamera(arm.getXarm(), arm.getYarm(), arm.getZarm());
     platform.draw();
     arm.draw();
-    Camera::updateCamera(arm.getXarm(), arm.getYarm(), arm.getZarm());
+
+    labelFps.setText("FPS: %d", fps.getFps());
+    labelFps.draw();
+
     glutSwapBuffers();
 }
 
@@ -232,6 +254,10 @@ void Game::reshapeCallBack(int width, int height)
 
 int main(int argc, char** argv)
 {
-    Game::run(argc,argv);
+	// forçar saída imediata no console do eclipse
+	setvbuf(stdout, NULL, _IONBF, 0);
+	setvbuf(stderr, NULL, _IONBF, 0);
+
+	Game::run(argc,argv);
 	return 0;
 }

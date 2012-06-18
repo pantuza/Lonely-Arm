@@ -16,8 +16,8 @@ Parts::Parts()
     topPartRadius = 0.01;
     fingerAngle = 60;
     handRotation = 0;
-    slices = 500; 
-    stacks = 500;
+    slices = 50.0; 
+    stacks = 50.0;
 }
 
 void Parts::pushParts()

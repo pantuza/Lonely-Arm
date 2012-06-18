@@ -82,10 +82,21 @@ void Arm::fly()
 void Arm::setFlyDown()
 {
 //    std::cout << "y: " << yFlightPosition << "\n";
+/*
     if(yFlightPosition > 0.1 || yFlightPosition <= -0.64)
         yFlightPosition -= displacement;
     else if(xFlightPosition < -1.1 || xFlightPosition > 1.1)
         yFlightPosition -= displacement;
+*/
+
+    if (yFlightPosition > 0.1 || yFlightPosition <= -0.64) {
+        yFlightPosition -= displacement;
+        if (yFlightPosition <  0.1)
+        	yFlightPosition = 0.1;
+    } else if (xFlightPosition < -1.1 || xFlightPosition > 1.1) {
+        yFlightPosition -= displacement;
+	}
+
 }
 
 void Arm::setFlyUp()
