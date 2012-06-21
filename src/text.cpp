@@ -6,7 +6,8 @@
  */
 
 #include <stdio.h>
-#include "Text.h"
+#include <stdarg.h>
+#include "text.h"
 
 Text::Text()
 	: message()
@@ -46,14 +47,14 @@ void Text::setText(const char* format, ...)
 
 	//  Return the number of characters in the string referenced the list of
 	// arguments. _vscprintf doesn't count terminating '\0' (that's why +1)
-	len = _vscprintf(format, args) + 1;
+	len = 1024;// _vscprintf(format, args) + 1;
 
 	//  Allocate memory for a string of the specified size
 	text = (char *)malloc(len);
 
 	//  Write formatted output using a pointer to the list of arguments
-	//vsprintf_s(text, len, format, args);
-	len = vsprintf(text, format, args);
+	vsprintf(text, format, args);
+	//len = vsprintf(text, format, args);
 
 	//  End using variable argument list
 	va_end(args);

@@ -9,8 +9,8 @@
 #include "fps.h"
 
 #define TITLE "Lonely Arm"
-#define VERSION "Beta"
-
+#define VERSION "1.0"
+#define FPS     120
 
 class Game
 {
@@ -28,20 +28,24 @@ class Game
         static bool flyingMode;
         static void timerCallBack(int value);
         static Text labelFps;
+        static Text labelLifes;
+        static Text labelGameOver;
         static Fps fps;
         static int dt;
+        static int lifes;
 
 };
-
-#define FPS     120
 
 Platform Game::platform;
 Arm Game::arm;
 int Game::currentPart = 1;
 bool Game::flyingMode = false;
 Text Game::labelFps;
+Text Game::labelLifes;
+Text Game::labelGameOver;
 Fps Game::fps;
 int Game::dt = (1000/FPS);
+int Game::lifes = 5;
 
 void Game::run(int argc, char* argv[])
 {
@@ -61,41 +65,44 @@ void Game::run(int argc, char* argv[])
     glutReshapeFunc(reshapeCallBack);
 
     labelFps.setPosition(0.90, 0.95, 0);
+    labelLifes.setPosition(-0.95, 0.95, 0);
+    labelGameOver.setPosition(0, 0, 0);
 
     glutMainLoop();
 }
 
 void Game::configure()
 {
-     GLfloat placeLight[4]={0.2,0.2,0.2,1.0};
-     GLfloat diffusedLight[4]={0.7,0.7,0.7,1.0}; // color 
-     GLfloat specularLight[4]={1.0, 1.0, 1.0, 1.0}; // "brightness" 
-     GLfloat lightPosition[4]={10.0, 10.0, 1.0, 1.0}; // light position variation
+    GLfloat placeLight[4]={0.2,0.2,0.2,1.0};
+    GLfloat diffusedLight[4]={0.7,0.7,0.7,1.0}; // color 
+    GLfloat specularLight[4]={1.0, 1.0, 1.0, 1.0}; // "brightness" 
+    GLfloat lightPosition[4]={10.0, 10.0, 1.0, 1.0}; // light position variation
 
-     // material brightness 
-         GLfloat specularity[4]={1.0,1.0,1.0,1.0};
-         GLint materialSpecularity = 60;
+    // material brightness 
+    GLfloat specularity[4]={1.0,1.0,1.0,1.0};
+    GLint materialSpecularity = 60;
 
-     // Gouraud colors
-         glShadeModel(GL_SMOOTH);
+    // Gouraud colors
+    glShadeModel(GL_SMOOTH);
 
-         // reflection 
-         glMaterialfv(GL_FRONT,GL_SPECULAR, specularity);
-         // brightness concentration 
-     glMateriali(GL_FRONT,GL_SHININESS,materialSpecularity);
+    // reflection 
+    glMaterialfv(GL_FRONT,GL_SPECULAR, specularity);
+    
+    // brightness concentration 
+    glMateriali(GL_FRONT,GL_SHININESS,materialSpecularity);
 
-         // place light
-         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, placeLight);
+    // place light
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, placeLight);
 
-         glLightfv(GL_LIGHT0, GL_AMBIENT, placeLight);
-         glLightfv(GL_LIGHT0, GL_DIFFUSE, diffusedLight );
-         glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight );
-         glLightfv(GL_LIGHT0, GL_POSITION, lightPosition );
+    glLightfv(GL_LIGHT0, GL_AMBIENT, placeLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffusedLight );
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight );
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition );
 
-         glEnable(GL_COLOR_MATERIAL);
-         glEnable(GL_LIGHTING);
-         glEnable(GL_LIGHT0);
-         glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
 
     glEnable(GL_CULL_FACE);
 }
@@ -134,6 +141,9 @@ void Game::timerCallBack(int value)
 
     } else if(value == 3)
     {
+        labelLifes.setText("Lifes: %d", --lifes);
+        labelLifes.draw();
+        glutPostRedisplay();
         std::cout << "time do born again, bitch!\n";
     }
 
@@ -189,7 +199,6 @@ void Game::specialKeysCallBack(int key, int x, int y)
             if( modifier & GLUT_ACTIVE_CTRL ){
                 arm.moveLeft();
                 static int count =0;
-                std::cout << count++ << " key" << key << "\n";
 }             else if(flyingMode)
                 arm.setFlyLeft();           
             else
@@ -239,7 +248,9 @@ void Game::displayCallBack()
     arm.draw();
 
     labelFps.setText("FPS: %d", fps.getFps());
+    labelLifes.setText("Lifes: %d", lifes);
     labelFps.draw();
+    labelLifes.draw();
 
     glutSwapBuffers();
 }
