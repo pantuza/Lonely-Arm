@@ -30,6 +30,8 @@ class Game
         static Text labelFps;
         static Text labelLifes;
         static Text labelGameOver;
+        static Text labelAxis;
+        static Text labelCurrentPart;
         static Fps fps;
         static int dt;
         static int lifes;
@@ -43,6 +45,8 @@ bool Game::flyingMode = false;
 Text Game::labelFps;
 Text Game::labelLifes;
 Text Game::labelGameOver;
+Text Game::labelAxis;
+Text Game::labelCurrentPart;
 Fps Game::fps;
 int Game::dt = (1000/FPS);
 int Game::lifes = 5;
@@ -67,6 +71,8 @@ void Game::run(int argc, char* argv[])
     labelFps.setPosition(0.90, 0.95, 0);
     labelLifes.setPosition(-0.95, 0.95, 0);
     labelGameOver.setPosition(0, 0, 0);
+    labelAxis.setPosition(-0.95, 0.90, 0);
+    labelCurrentPart.setPosition(-0.95, 0.85, 0);
 
     glutMainLoop();
 }
@@ -130,10 +136,8 @@ void Game::timerCallBack(int value)
         glutPostRedisplay();
         if(arm.getYarm() == yPosOnPlatform)
             arm.setDisplacement(0.01);
-
         else if(flyingMode)
             arm.setDisplacement(0.01);
-        
         else if(arm.getYarm() < -5)
             glutTimerFunc(dt, timerCallBack, 3);
         else    
@@ -165,19 +169,22 @@ void Game::keyboardCallBack (unsigned char key, int x, int y)
 
         case '1':
             currentPart = 1;
+            labelCurrentPart.setText("Selected Part: Arm");
             break;
         case '2':
             currentPart = 2;
+            labelCurrentPart.setText("Selected Part: Fore Arm");
             break;
         case '3':
             currentPart = 3;
+            labelCurrentPart.setText("Selected Part: Hand");
             break;
         case 'f':
             if(flyingMode)
             {
                 //std::cout << "paraaaaaaaaa \n";
                 flyingMode = false;
-                timerCallBack(0);
+                //timerCallBack(0);
             }
             else
             {
@@ -249,8 +256,12 @@ void Game::displayCallBack()
 
     labelFps.setText("FPS: %d", fps.getFps());
     labelLifes.setText("Lifes: %d", lifes);
+    labelAxis.setText("Arm axis:x: %.3f  y: %.3f  z: %.3f", arm.getXarm(), arm.getYarm(), arm.getZarm());
+
     labelFps.draw();
     labelLifes.draw();
+    labelAxis.draw();
+    labelCurrentPart.draw();
 
     glutSwapBuffers();
 }

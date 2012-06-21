@@ -25,6 +25,9 @@ class Arm
 
    private: 
         void drawBase();
+        bool collidedOnXAxis();
+        bool collidedOnYAxis();
+        bool needReposition();
         float armRotation;
         float foreArmRotation;
         

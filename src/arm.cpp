@@ -79,54 +79,57 @@ void Arm::fly()
     armParts.rotateHand();
 }
 
+bool Arm::collidedOnYAxis()
+{
+    return yFlightPosition > -0.65 && yFlightPosition < 0.10;
+}
+
+bool Arm::collidedOnXAxis()
+{
+    return xFlightPosition > -1 && xFlightPosition < 1; 
+}
+bool Arm::needReposition()
+{
+    return yFlightPosition < 0.1;
+}
 void Arm::setFlyDown()
 {
-//    std::cout << "y: " << yFlightPosition << "\n";
-
-    if(yFlightPosition > 0.1 || yFlightPosition <= -0.64)
-        yFlightPosition -= displacement;
-    else if(xFlightPosition < -1.1 || xFlightPosition > 1.1)
-        yFlightPosition -= displacement;
-
-
-/*    if (yFlightPosition > 0.1 || yFlightPosition <= -0.64) {
-        yFlightPosition -= displacement;
-        if (yFlightPosition <  0.1)
-        	yFlightPosition = 0.1;
-    } else if (xFlightPosition < -1.1 || xFlightPosition > 1.1) {
-        yFlightPosition -= displacement;
-	}
-*/
+    yFlightPosition -= displacement;
+    if(collidedOnYAxis())
+    { 
+        if(collidedOnXAxis())
+        {
+            yFlightPosition = 0.10;
+        }
+    }       
 }
 
 void Arm::setFlyUp()
 {
-    if(yFlightPosition < -0.65 || yFlightPosition >= 0.05)
-        yFlightPosition += displacement;
-    else if(xFlightPosition < -1.1 || xFlightPosition > 1.1)
-        yFlightPosition += displacement;
+    yFlightPosition += displacement;
+    if(collidedOnYAxis())
+    {
+        if(collidedOnXAxis())
+            {
+                yFlightPosition = -0.65;
+            }       
+    }
 }
 
 void Arm::setFlyLeft()
 {
-    std::cout << "y: " << yFlightPosition << "\n";
-
-
-    if(yFlightPosition <= 0.1 && yFlightPosition > -0.64){
-        std::cout << "x: " << xFlightPosition << "\n";
-        if(xFlightPosition < -1.1 || xFlightPosition > 1.2)
+    if(collidedOnYAxis()){
+        if(collidedOnXAxis())
             xFlightPosition -= displacement;
     }else
         xFlightPosition -= displacement;
 }
 void Arm::setFlyRight()
-{   std::cout << "y: " << yFlightPosition << "\n";
-
-    if(yFlightPosition <= 0.1 && yFlightPosition > -0.64){
-            std::cout << "x: " << xFlightPosition << "\n";
-        if(xFlightPosition < -1.2 || xFlightPosition > 1.1)
+{
+    if(collidedOnYAxis()){
+        if(collidedOnXAxis())
             xFlightPosition += displacement;
-}    else
+    } else
         xFlightPosition += displacement;
 }
 void Arm::moveRight()
