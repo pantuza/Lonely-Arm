@@ -59,7 +59,10 @@ make run
 > left | right | up | down. If 'f' is pressed again it stops the flight
 > mode, then the arm starts to fall on the space. If the arm fall, the
 > program decrements its life. You can save the arm by setting the 
-> flight mode again pressing 'f'.
+> flight mode again pressing 'f'
+
+- r
+> Resets the arm and the camera to the initial position
 
 - 1 
 > Sets the Selected Part to Arm. Press left | right to rotate arm
