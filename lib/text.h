@@ -1,10 +1,3 @@
-/*
- * Text.h
- *
- *  Created on: 16/06/2012
- *      Author: dev
- */
-
 #ifndef TEXT_H_
 #define TEXT_H_
 
@@ -23,7 +16,7 @@ public:
 	void setText(std::string&);
 	void setText(const char* format, ...);
 	void setPosition(double, double, double);
-	virtual void draw();
+	void draw();
 };
 
 #endif /* TEXT_H_ */

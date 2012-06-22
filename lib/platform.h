@@ -9,4 +9,4 @@ class Platform
 	    void draw();
 };
 
-#endif // PLATFORM_H_
+#endif /* PLATFORM_H_ */

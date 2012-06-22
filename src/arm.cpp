@@ -6,17 +6,27 @@
 
 
 Arm::Arm() : ROTATION_FACTOR(5)
+{    
+    Parts armParts;
+    reset(); 
+}
+
+void Arm::reset()
 {
-    armRotation = 0.0;
-    foreArmRotation = 0.0;
-    
     xFlightPosition = -0.075;
     yFlightPosition = 0.1;
     zFlightPosition = -0.075;
-    
-    displacement = 0.01;
+    displacement    = 0.01;
+    resetRotations();
+}
 
-    Parts armParts;
+void Arm::resetRotations()
+{
+    armRotation     = 0.0;
+    foreArmRotation = 0.0;
+    armParts.setBaseArmRotation(0);
+    armParts.setArmRotation(0);
+    armParts.setForeArmRotation(0);    
 }
 
 void Arm::draw()
@@ -73,6 +83,7 @@ void Arm::rotateCounterClockwise(int part)
             break;
     }
 }
+
 void Arm::fly()
 {
     armParts.setFingerAngle(0);
@@ -88,50 +99,52 @@ bool Arm::collidedOnXAxis()
 {
     return xFlightPosition > -1 && xFlightPosition < 1; 
 }
+
 bool Arm::needReposition()
 {
     return yFlightPosition < 0.1;
 }
+
 void Arm::setFlyDown()
 {
     yFlightPosition -= displacement;
+
     if(collidedOnYAxis())
-    { 
         if(collidedOnXAxis())
-        {
             yFlightPosition = 0.10;
-        }
-    }       
 }
 
 void Arm::setFlyUp()
 {
     yFlightPosition += displacement;
+
     if(collidedOnYAxis())
-    {
         if(collidedOnXAxis())
-            {
-                yFlightPosition = -0.65;
-            }       
-    }
+            yFlightPosition = -0.65;
 }
 
 void Arm::setFlyLeft()
 {
-    if(collidedOnYAxis()){
+    if(collidedOnYAxis())
+    {
         if(collidedOnXAxis())
             xFlightPosition -= displacement;
-    }else
+    }
+    else
         xFlightPosition -= displacement;
 }
+
 void Arm::setFlyRight()
 {
-    if(collidedOnYAxis()){
+    if(collidedOnYAxis())
+    {
         if(collidedOnXAxis())
             xFlightPosition += displacement;
-    } else
+    } 
+    else
         xFlightPosition += displacement;
 }
+
 void Arm::moveRight()
 {
     if(xFlightPosition < 0.925)
@@ -143,11 +156,13 @@ void Arm::moveLeft()
     if(xFlightPosition > -0.925)
         xFlightPosition -= displacement;
 }
+
 void Arm::moveUp()
 {
     if(zFlightPosition > -0.85)
         zFlightPosition -= displacement;
 }
+
 void Arm::moveDown()
 {
     if(zFlightPosition < 1)

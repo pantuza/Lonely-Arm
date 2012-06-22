@@ -13,32 +13,36 @@ class Arm
         inline float getZarm() {return zFlightPosition;};
         inline float getYarm() {return yFlightPosition;};
         inline void setDisplacement(float disp) {displacement = disp;};
+
+        void reset();
+        void resetRotations();
         void moveLeft();
         void moveRight();
         void moveUp();
         void moveDown();
+
+        void fly();
         void setFlyDown();
         void setFlyUp();
         void setFlyRight();
         void setFlyLeft();
-        void fly();
 
    private: 
-        void drawBase();
-        bool collidedOnXAxis();
-        bool collidedOnYAxis();
-        bool needReposition();
         float armRotation;
         float foreArmRotation;
-        
+        float displacement;
         Parts armParts;
 
         float xFlightPosition;
         float yFlightPosition;
         float zFlightPosition;
 
-        float displacement;
         const int ROTATION_FACTOR;
+
+        void drawBase();
+        bool collidedOnXAxis();
+        bool collidedOnYAxis();
+        bool needReposition();
 };
 
 #endif // ARM_H_

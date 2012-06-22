@@ -1,25 +1,24 @@
 #include "parts.h"
 #include <GL/glut.h>
-#include <stdio.h>
-#include <iostream>
+
 Parts::Parts()
 {
-    partHeight = 0.15;
-    jointRadius = 0.02;
-    handHeight = 0.05;
+    partHeight      = 0.15;
+    jointRadius     = 0.02;
+    handHeight      = 0.05;
 
-    baseArmRotation = 0.0;
-    armRotation = 0.0;
-    foreArmRotation = 0.0;
+    handRotation    = 0;
 
-    basePartRadius = 0.01;
-    topPartRadius = 0.01;
-    fingerAngle = 60;
-    handRotation = 0;
-    slices = 50.0; 
-    stacks = 50.0;
+    basePartRadius  = 0.01;
+    topPartRadius   = 0.01;
+    fingerAngle     = 60;
+
+    slices          = 50.0; 
+    stacks          = 50.0;
 }
-
+/**
+ * Public method to draw the entire Arm 
+ */
 void Parts::pushParts()
 {
     glPushMatrix();

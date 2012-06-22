@@ -1,10 +1,3 @@
-/*
- * fps.h
- *
- *  Created on: 17/06/2012
- *      Author: dev
- */
-
 #ifndef FPS_H_
 #define FPS_H_
 

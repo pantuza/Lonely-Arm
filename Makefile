@@ -1,3 +1,16 @@
+#
+# Makefile for the Lonely-Arm project
+#
+# Rules Description:
+# 	. all   - Compile the project
+# 	. edit  - open all project files on separated tabs on VIM Editor
+# 	. clean - clean the obj and bin directory contents
+# 	. run	- compiles the project, then run the /bin/lonely-arm binary file
+#
+# 	author : Gustavo Pantuza
+# 	since  : 10.06.2012
+#
+
 BIN=bin/
 SRC=src/
 LIB=lib/
@@ -6,7 +19,7 @@ OBJ=obj/
 all:	${BIN}lonely-arm
 
 ${BIN}lonely-arm:   ${OBJ}camera.o ${OBJ}arm.o ${OBJ}platform.o ${OBJ}parts.o ${OBJ}game.o ${OBJ}fps.o ${OBJ}text.o
-	@echo -e "\n\e[1;34mCompiling obeject files:\e[0m"
+	@/bin/echo -e "\n\e[1;34mCompiling obeject files:\e[0m"
 	g++ -o ${BIN}lonely-arm ${OBJ}platform.o ${OBJ}camera.o ${OBJ}game.o ${OBJ}arm.o ${OBJ}parts.o ${OBJ}fps.o ${OBJ}text.o -lGLU -lGL -lglut
 
 ${OBJ}camera.o: ${SRC}camera.cpp
@@ -34,7 +47,7 @@ edit:
 	vim -p Makefile src/* lib/*
 
 clean:	
-	@echo -e "\n\e[1;34mCleaning project...\e[0m"
+	@/bin/echo -e "\n\e[1;34mCleaning project...\e[0m"
 	@rm -rf ${OBJ}*.o
 	@rm -f ${BIN}lonely-arm
 

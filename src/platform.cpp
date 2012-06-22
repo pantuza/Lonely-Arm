@@ -1,6 +1,9 @@
 #include "platform.h"
 #include <GL/glut.h>
 
+/**
+ * Draw the platform using GL scale function
+ */
 void Platform::draw()
 {
 	glColor3f(0, 1, 1);
