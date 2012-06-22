@@ -78,4 +78,4 @@ make run
 
 ### REPORTING BUGS
 
-> ###### Report dumper bugs to gustavopantuza@gmail.com
+> ###### Report Lonely Arm bugs to gustavopantuza@gmail.com
