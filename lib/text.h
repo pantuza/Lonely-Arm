@@ -1,7 +1,11 @@
 #ifndef TEXT_H_
 #define TEXT_H_
 
-#include <GL/glut.h>
+#ifdef __APPLE__
+    #include <GLUT/glut.h>
+#else
+    #include <GL/glut.h>
+#endif
 #include <string>
 
 class Text {
