@@ -19,3 +19,6 @@ Debug
 
 .cproject
 .settings
+
+!bin/.gitkeep
+bin/*
