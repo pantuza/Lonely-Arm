@@ -16,11 +16,18 @@ SRC=src/
 LIB=lib/
 OBJ=obj/
 
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+LDFLAGS = -framework Carbon -framework OpenGL -framework GLUT
+else
+LDFLAGS = -lGL -lGLU -lglut
+endif
+
 all:	${BIN}lonely-arm
 
 ${BIN}lonely-arm:   ${OBJ}camera.o ${OBJ}arm.o ${OBJ}platform.o ${OBJ}parts.o ${OBJ}game.o ${OBJ}fps.o ${OBJ}text.o
 	@/bin/echo -e "\n\e[1;34mCompiling obeject files:\e[0m"
-	g++ -o ${BIN}lonely-arm ${OBJ}platform.o ${OBJ}camera.o ${OBJ}game.o ${OBJ}arm.o ${OBJ}parts.o ${OBJ}fps.o ${OBJ}text.o -lGLU -lGL -lglut
+	g++ -o ${BIN}lonely-arm ${OBJ}platform.o ${OBJ}camera.o ${OBJ}game.o ${OBJ}arm.o ${OBJ}parts.o ${OBJ}fps.o ${OBJ}text.o $(LDFLAGS)
 
 ${OBJ}camera.o: ${SRC}camera.cpp
 	g++ -O0 -g3 -Wall -I${LIB} -c -fmessage-length=0 -o ${OBJ}camera.o ${SRC}camera.cpp

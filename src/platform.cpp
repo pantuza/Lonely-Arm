@@ -1,5 +1,9 @@
 #include "platform.h"
-#include <GL/glut.h>
+#ifdef __APPLE__
+    #include <GLUT/glut.h>
+#else
+    #include <GL/glut.h>
+#endif
 
 /**
  * Draw the platform using GL scale function

@@ -34,6 +34,19 @@ sudo zypper install freeglut freeglut-devel make gcc-c++
 ```bash
 sudo apt-get install freeglut3 freeglut3-dev make g++
 ```
+- **On Mac OS X**
+
+```bash
+OpenGL headers and other necessary development tools are installed by a separate developer tools package, Xcode. Xcode can be downloaded from here
+https://developer.apple.com/xcode/
+
+Alternatively install the required packages using Homebrew
+# Tap into homebrew/versions where GLFW3 lives and install it
+brew tap homebrew/versions
+brew install glfw3
+# Install glew
+brew install glew
+```
 - Installed the dependencies, clone this repository
 - go to the Lonely-Arm directory and run:
 ```bash

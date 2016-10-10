@@ -1,7 +1,11 @@
 #include "platform.h"
 #include "arm.h"
 #include "camera.h"
-#include <GL/glut.h>
+#ifdef __APPLE__
+    #include <GLUT/glut.h>
+#else
+    #include <GL/glut.h>
+#endif
 #include <math.h>
 #include <stdio.h>
 #include <iostream>
