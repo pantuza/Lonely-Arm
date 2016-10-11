@@ -15,6 +15,11 @@ Lonely-Arm
     parts and the hand changes to a propeller and the arm is free to fly 
     over the 3D space
 
+### Screenshot
+![alt text][lonely-arm-image]
+[lonely-arm-image]: https://github.com/pantuza/Lonely-Arm/blob/master/lonely-arm.png "Lonely Arm screenshot"
+
+
 ### COMPILATION
 
 - If you do not wants to compile the program, this repository keeps a 
