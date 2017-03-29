@@ -16,8 +16,7 @@ Lonely-Arm
     over the 3D space
 
 ### Screenshot
-![alt text][lonely-arm-image]
-[lonely-arm-image]: https://github.com/pantuza/Lonely-Arm/blob/master/lonely-arm.png "Lonely Arm screenshot"
+![lonely-arm-image](https://github.com/pantuza/Lonely-Arm/blob/master/lonely-arm.png "Lonely Arm screenshot")
 
 
 ### COMPILATION
